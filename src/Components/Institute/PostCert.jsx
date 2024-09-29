@@ -4,7 +4,14 @@ import toast from "react-hot-toast";
 import SmallLoader from "../SmallLoader/SmallLoader";
 import { EdubukContexts } from "../../Context/EdubukContext";
 import CryptoJS from "crypto-js";
-import { render } from '@testing-library/react';
+import { useWallet } from "@solana/wallet-adapter-react";
+import { web3 } from "@project-serum/anchor";
+import { getProgram } from "../../Utils/connection";
+import { Buffer } from 'buffer';
+import { PublicKey, SystemProgram } from "@solana/web3.js";
+
+
+window.Buffer = window.Buffer || Buffer;
 
 const RegCertValue = {
   studentName: "",
@@ -20,6 +27,9 @@ const PostCert = () => {
   const [values, setValues] = useState(RegCertValue);
   const { connectingWithContract } = useContext(EdubukContexts);
   const [inputFile, setInputFile] = useState();
+
+  const wallet = useWallet();
+
   //upload docs to IPFS
   const uploadToIpfs = async (e) => {
     e.preventDefault();
@@ -76,25 +86,39 @@ const PostCert = () => {
 
   const RegCert = async (e) => {
     e.preventDefault();
+    if (!wallet.publicKey) {
+      toast.error("Wallet not connected.");
+      return;
+    }
     //const currAccount = account.toLowerCase();
     try {
+      setLoading(true)
+      const statekey = new PublicKey("B1273he1boBD2PpS9ouvFE2nquZHHk8SyRMTeRJiDxZK")
+      const program = getProgram(wallet);
       //if (adminAcc !== currAccount) return toast.error("You are not Admin");
-      const contract = await connectingWithContract();
-      console.log("contract", contract);
-      const registerCert = await contract.postCertificate(
-        values.studentName,
-        values.studentAdd,
-        uri,
-        fileHash,
-        values.certType,
-        values.issuerName,
-        { gasLimit: 8000000 }
-      );
-      setLoading(true);
-      await registerCert.wait();
+     const Tx = await program.methods.postCertificate(
+      values.studentName,
+      new web3.PublicKey(values.studentAdd),
+      uri,
+      fileHash,
+      values.certType,
+      values.issuerName,
+    
+     ).accounts({
+      state:statekey,
+      institute:wallet.publicKey,
+      systemProgram:web3.SystemProgram.programId
+     }).
+     signers([])
+     .rpc()
+  
+     if(Tx)
+     {
       setLoading(false);
       toast.success("Certificated Posted successfully");
       setValues("");
+     }
+      
     } catch (error) {
       setLoading(false);
       toast.error("Error in certificate Registration", error);

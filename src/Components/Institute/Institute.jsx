@@ -5,6 +5,9 @@ import { EdubukContexts } from './../../Context/EdubukContext';
 import AddWitness from './AddWitness';
 import NotAuthorized from '../Error/NotAuthorized';
 import SmallLoader from '../SmallLoader/SmallLoader';
+import { PublicKey } from '@solana/web3.js';
+import { getProgram } from '../../Utils/connection';
+import { useWallet } from '@solana/wallet-adapter-react';
 
 const Institute = () => {
     const [openPage, setOpenPage] = useState(true);
@@ -13,25 +16,17 @@ const Institute = () => {
     const [regInst, setRegInst] = useState(false);
     const [openAddWitness, setOpenAddWitness] = useState(false);
     const [loading , setLoading] = useState(false);
-
+    const wallet = useWallet();
     const adminAcc = process.env.REACT_APP_ADMIN?.toLowerCase();
     const currAccount = account?.toLowerCase();
 
     const verifyInst = async()=>{
       try {
         setLoading(true);
-        const contract = await connectingWithContract();
-        //console.log("contract", contract);
-        const instDetails = await contract.verifyInstitute();
-        //await registerCert.wait();
-        const currWitness = instDetails[2]?.toLowerCase();
-      
-        if(currWitness===currAccount || currAccount===adminAcc)
-        {
-          setRegInst(true);
-          setInstName(instDetails[0]);
-          setLoading(false)
-        }
+        const stateKey = new PublicKey("B1273he1boBD2PpS9ouvFE2nquZHHk8SyRMTeRJiDxZK");
+        const program = getProgram(wallet);
+        const Tx = await program.methods.getInstituteDetails()
+        console.log(Tx);
       } catch (error) {
         console.error("Error in certificate Registration: ", error);
         setLoading(false);
@@ -40,14 +35,14 @@ const Institute = () => {
 
     useEffect(()=>{
       verifyInst();
-    },[account])
+    },[wallet.publicKey])
 
 
 
   return (
     <div className='container'>
     {
-      (instName || adminAcc===currAccount)?
+      ( adminAcc!==currAccount)?
     <div className='container'>
     <h3>{instName}</h3>
       <div className='btn'>

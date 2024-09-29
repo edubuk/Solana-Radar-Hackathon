@@ -39,7 +39,7 @@
       ],
       "args": [
         {
-          "name": "name",
+          "name": "instituteName",
           "type": "string"
         },
         {
@@ -47,13 +47,13 @@
           "type": "string"
         },
         {
-          "name": "instituteAddress",
+          "name": "witness",
           "type": "publicKey"
         }
       ]
     },
     {
-      "name": "uploadCertificate",
+      "name": "postCertificate",
       "accounts": [
         {
           "name": "state",
@@ -76,7 +76,7 @@
           "type": "publicKey"
         },
         {
-          "name": "collegeName",
+          "name": "uri",
           "type": "string"
         },
         {
@@ -84,23 +84,43 @@
           "type": "string"
         },
         {
-          "name": "url",
+          "name": "type",
+          "type": "string"
+        },
+        {
+          "name": "issuerName",
           "type": "string"
         }
       ]
     },
     {
-      "name": "getStudentInfo",
+      "name": "getInstituteDetails",
       "accounts": [
         {
           "name": "state",
-          "isMut": true,
+          "isMut": false,
           "isSigner": false
         },
         {
-          "name": "admin",
+          "name": "institute",
           "isMut": false,
           "isSigner": true
+        },
+        {
+          "name": "admin",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "getStudentDetails",
+      "accounts": [
+        {
+          "name": "state",
+          "isMut": false,
+          "isSigner": false
         },
         {
           "name": "student",
@@ -108,29 +128,7 @@
           "isSigner": true
         }
       ],
-      "args": [
-        {
-          "name": "studentAddress",
-          "type": "publicKey"
-        }
-      ]
-    },
-    {
-      "name": "checkCertificate",
-      "accounts": [
-        {
-          "name": "state",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "hash",
-          "type": "string"
-        }
-      ],
-      "returns": "bool"
+      "args": []
     },
     {
       "name": "listInstitutes",
@@ -224,6 +222,10 @@
           {
             "name": "url",
             "type": "string"
+          },
+          {
+            "name": "certificateType",
+            "type": "string"
           }
         ]
       }
@@ -245,20 +247,56 @@
       ]
     },
     {
-      "name": "StudentInfoRetrieved",
+      "name": "InstituteDetailsRetrieved",
       "fields": [
+        {
+          "name": "name",
+          "type": "string",
+          "index": false
+        },
+        {
+          "name": "acronym",
+          "type": "string",
+          "index": false
+        },
+        {
+          "name": "instituteAddress",
+          "type": "publicKey",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "StudentDetailsRetrieved",
+      "fields": [
+        {
+          "name": "studentName",
+          "type": "string",
+          "index": false
+        },
         {
           "name": "studentAddress",
           "type": "publicKey",
           "index": false
         },
         {
-          "name": "studentCertificates",
-          "type": {
-            "vec": {
-              "defined": "Certificate"
-            }
-          },
+          "name": "collegeName",
+          "type": "string",
+          "index": false
+        },
+        {
+          "name": "hash",
+          "type": "string",
+          "index": false
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "index": false
+        },
+        {
+          "name": "certificateType",
+          "type": "string",
           "index": false
         }
       ]
@@ -268,6 +306,14 @@
     {
       "code": 6000,
       "name": "Unauthorized"
+    },
+    {
+      "code": 6001,
+      "name": "InstituteNotFound"
+    },
+    {
+      "code": 6002,
+      "name": "CertificateNotFound"
     }
   ]
 }
