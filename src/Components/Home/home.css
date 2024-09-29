@@ -1,0 +1,97 @@
+
+.home-container
+{
+    width: 80%;
+    margin:20px auto;
+    display: flex;
+    justify-content: center; 
+    gap: 40px;
+}
+
+.col-2
+{
+    
+    color: #16a085;
+    line-height: 12px;
+    padding-top: 20px;
+    font-size: 20px;
+
+}
+
+
+
+#edubuk{
+    line-height: normal;
+    background: linear-gradient(90deg, #006666,#ff8000,#3498db);
+   -webkit-background-clip: text;
+   background-clip: text;
+   -webkit-text-fill-color: transparent;
+  }
+
+.about
+{
+    line-height: 25px;
+
+}
+
+.about>p{
+    color: #16a085;
+}
+.btnIssue{
+    margin-top: 50px;
+
+}
+
+.button
+{
+    
+    padding: 20px;
+    width: 200px;
+    font-size: 20px;
+    color: white;
+    background-color: #216288;
+    border-radius: 10px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.button:hover{
+    background-color: #17445E;
+    text-transform: uppercase;
+}
+
+@media screen and (max-width: 900px) {
+    .home-container
+{
+    width: 80%;
+    margin:20px auto;
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.col-2
+{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    color: #16a085;
+    line-height: 12px;
+    padding-top: 20px;
+    font-size: 20px;
+    margin-bottom: 20px;
+
+}
+}
+
+@media screen and (max-width:550px) {
+    .col-1>img {
+        width: 320px;
+        height: 320px;
+    };
+
+}

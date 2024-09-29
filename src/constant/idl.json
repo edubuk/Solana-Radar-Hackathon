@@ -1,0 +1,273 @@
+{
+  "version": "0.1.0",
+  "name": "certificate_verification",
+  "instructions": [
+    {
+      "name": "initialize",
+      "accounts": [
+        {
+          "name": "state",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "admin",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "registerInstitute",
+      "accounts": [
+        {
+          "name": "state",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "admin",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "acronym",
+          "type": "string"
+        },
+        {
+          "name": "instituteAddress",
+          "type": "publicKey"
+        }
+      ]
+    },
+    {
+      "name": "uploadCertificate",
+      "accounts": [
+        {
+          "name": "state",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "institute",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "studentName",
+          "type": "string"
+        },
+        {
+          "name": "studentAddress",
+          "type": "publicKey"
+        },
+        {
+          "name": "collegeName",
+          "type": "string"
+        },
+        {
+          "name": "hash",
+          "type": "string"
+        },
+        {
+          "name": "url",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "getStudentInfo",
+      "accounts": [
+        {
+          "name": "state",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "admin",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "student",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "studentAddress",
+          "type": "publicKey"
+        }
+      ]
+    },
+    {
+      "name": "checkCertificate",
+      "accounts": [
+        {
+          "name": "state",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "hash",
+          "type": "string"
+        }
+      ],
+      "returns": "bool"
+    },
+    {
+      "name": "listInstitutes",
+      "accounts": [
+        {
+          "name": "state",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "admin",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
+      "args": []
+    }
+  ],
+  "accounts": [
+    {
+      "name": "State",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "publicKey"
+          },
+          {
+            "name": "institutes",
+            "type": {
+              "vec": {
+                "defined": "Institute"
+              }
+            }
+          },
+          {
+            "name": "certificates",
+            "type": {
+              "vec": {
+                "defined": "Certificate"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "types": [
+    {
+      "name": "Institute",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "acronym",
+            "type": "string"
+          },
+          {
+            "name": "instituteAddress",
+            "type": "publicKey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Certificate",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "studentName",
+            "type": "string"
+          },
+          {
+            "name": "studentAddress",
+            "type": "publicKey"
+          },
+          {
+            "name": "collegeName",
+            "type": "string"
+          },
+          {
+            "name": "hash",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "InstitutesListed",
+      "fields": [
+        {
+          "name": "institutes",
+          "type": {
+            "vec": {
+              "defined": "Institute"
+            }
+          },
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "StudentInfoRetrieved",
+      "fields": [
+        {
+          "name": "studentAddress",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "studentCertificates",
+          "type": {
+            "vec": {
+              "defined": "Certificate"
+            }
+          },
+          "index": false
+        }
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "Unauthorized"
+    }
+  ]
+}
