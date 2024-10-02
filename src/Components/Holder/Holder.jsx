@@ -4,24 +4,33 @@ import Documents from './Documents';
 import { EdubukContexts } from '../../Context/EdubukContext';
 import toast from 'react-hot-toast';
 import SmallLoader from '../SmallLoader/SmallLoader';
+import { getProgram } from '../../Utils/connection';
+import { useWallet } from '@solana/wallet-adapter-react';
 
 const Holder = () => {
-  const { setStudentName, account, connectingWithContract } = useContext(EdubukContexts);
-  const [studentData, setStudentData] = useState([]);
+  const [studentData, setStudentData] = useState({});
   const [loading, setLoading] = useState(false);
   const [selectedIssuer, setSelectedIssuer] = useState(''); // State for dropdown selection
-
+  const wallet = useWallet();
   const getStudentData = async () => {
     try {
       setLoading(true);
-      const contract = await connectingWithContract();
-      const studentData = await contract.getStudentInfo(account);
+      const currAcc = wallet?.publicKey?.toBase58();
+      const program = getProgram(wallet);
+      const Tx = await program?.account?.state?.all();
+      console.log("Tx", Tx[0].account.certificates);
+      
+      if (Tx && Tx.length > 0)
+      {
+        const studentData = Tx[0]?.account?.students?.find(stud=>
+          stud.address.toBase58()===currAcc
+        )
+        console.log("data",studentData)
       if (studentData) {
-        console.log('student data ', studentData[0]);
-        setStudentName(studentData[0]);
         setStudentData(studentData);
-        setSelectedIssuer(studentData[1]?.[0]); // Set the first issuer as the default selection
+        setSelectedIssuer(studentData.instituteNames[0]); // Set the first issuer as the default selection
         setLoading(false);
+      }
       }
     } catch (error) {
       setLoading(false);
@@ -33,7 +42,7 @@ const Holder = () => {
   return (
     <div className='holder-container'>
       <div className='greeting'>
-        <h2>Welcome <span>{studentData[0]}</span> !</h2>
+        <h2>Welcome <span>{studentData.name}</span> !</h2>
       </div>
       <div className='getBtn'>
         {loading ? (
@@ -48,7 +57,7 @@ const Holder = () => {
             onChange={(e) => setSelectedIssuer(e.target.value)}
             className="issuer-dropdown"
           >
-            {studentData[1]?.map((issuer, index) => (
+            {studentData?.instituteNames?.map((issuer, index) => (
               <option key={index} value={issuer}>
                 {issuer}
               </option>
@@ -57,7 +66,7 @@ const Holder = () => {
         </h3>
       </div>
       <div className='holder-doc'>
-        <Documents studentData={studentData[2]} />
+        <Documents studentData={studentData.uris} />
       </div>
     </div>
   );

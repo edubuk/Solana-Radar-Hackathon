@@ -7,12 +7,13 @@ import { MdClose } from "react-icons/md";
 import Sidebar from '../Sidebar/Sidebar';
 import logo from '../../assets/EdubukLogo.png';
 import ConnectWalletButton from '../../Utils/WalletConnectionProvider';
+import { useWallet } from '@solana/wallet-adapter-react';
 
 const Navbar = () => {
-  const { openSidebar, setOpenSidebar, account } = useContext(EdubukContexts);
+  const { openSidebar, setOpenSidebar} = useContext(EdubukContexts);
   const [activeNav, setActiveNav] = useState("Home");
   const location = useLocation(); // Get the current URL
-
+  const {publicKey} = useWallet();
   const [windowDimensions, setWindowDimensions] = useState({
     width: window.innerWidth,
     height: window.innerHeight,
@@ -75,7 +76,7 @@ const Navbar = () => {
             <MdClose className='menu-btn' onClick={() => setOpenSidebar(false)} />
           )}
         </div>
-        <div className='account-info'>
+        <div className={publicKey&&'account-info'}>
         <ConnectWalletButton></ConnectWalletButton>
         </div>
       </div>

@@ -172,6 +172,14 @@
                 "defined": "Certificate"
               }
             }
+          },
+          {
+            "name": "students",
+            "type": {
+              "vec": {
+                "defined": "Student"
+              }
+            }
           }
         ]
       }
@@ -226,6 +234,42 @@
           {
             "name": "certificateType",
             "type": "string"
+          },
+          {
+            "name": "issuerName",
+            "type": "string"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Student",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "address",
+            "type": "publicKey"
+          },
+          {
+            "name": "instituteNames",
+            "type": {
+              "vec": "string"
+            }
+          },
+          {
+            "name": "uris",
+            "type": {
+              "vec": "string"
+            }
           }
         ]
       }
@@ -296,6 +340,11 @@
         },
         {
           "name": "certificateType",
+          "type": "string",
+          "index": false
+        },
+        {
+          "name": "issuerName",
           "type": "string",
           "index": false
         }

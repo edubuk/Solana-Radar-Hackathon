@@ -21,6 +21,7 @@ const InstRegValue = {
 const InsReg = () => {
   const [values, setValues] = useState(InstRegValue);
   const [loading, setLoading] = useState(false);
+  const [isTransaction, setTransaction] = useState(false);
   const wallet = useWallet();
   const changeHandler = (e) => {
     e.preventDefault();
@@ -29,6 +30,9 @@ const InsReg = () => {
     setValues({ ...values, [name]: value });
   };
 
+  const currAccount = wallet?.publicKey?.toBase58();
+  const adminAcc = process.env.REACT_APP_ADMIN;
+
   const instRegistration = async (e) => {
     e.preventDefault();
     if(!wallet?.publicKey)
@@ -36,16 +40,14 @@ const InsReg = () => {
         toast.error("Wallet is not connected...");
         return ;
       }
-
-    const adminAcc = process.env.REACT_APP_ADMIN?.toLowerCase();
-    const currAccount = wallet?.publicKey?.toBase58().toLowerCase();
+    
     try {
 
       if (adminAcc !== currAccount) return toast.error("You are not Admin");
       setLoading(true);
       // generate a new keypair for the state
       const stateKey = web3.Keypair.generate();
-      const statekey = new PublicKey("B1273he1boBD2PpS9ouvFE2nquZHHk8SyRMTeRJiDxZK")
+      const statekey = new PublicKey("5FF7agoR4uXYnas6exwV6dwtecynBL4P2Jk356hbxqrV")
 
       // get the program from the wallet
       const program = getProgram(wallet);
@@ -67,6 +69,7 @@ const InsReg = () => {
       {
         setLoading(false);
         toast.success("Institute Registered Successfully");
+        setTransaction(true);
         console.log("Transaction successfull : ",Tx);
       }
       setValues(InstRegValue);
@@ -113,7 +116,7 @@ const InsReg = () => {
         ></input>
          <label htmlFor="name">Institute Witness Address</label>
         </div>
-        {loading === true ? <SmallLoader /> : <button>Register Institute</button>}
+        {loading === true ? <SmallLoader /> :<div className="multi-btn"> <button id="register-btn">Register Institute</button> {isTransaction&&<a href={`https://explorer.solana.com/address/${currAccount}?cluster=devnet`} id="solana-explorer" target="_blank" rel="">View Transaction</a>}</div>}
       </form>
     </div> 
   );

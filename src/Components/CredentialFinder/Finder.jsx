@@ -4,6 +4,7 @@ import emailjs from '@emailjs/browser';
 import toast from 'react-hot-toast';
 import './finder.css'
 import SmallLoader from '../SmallLoader/SmallLoader';
+import { useWallet } from '@solana/wallet-adapter-react';
 const finderData = {
   name: "",
   sender_email: "",
@@ -13,12 +14,9 @@ const finderData = {
 };
 
 const Finder = () => {
-    const {account, connectingWithContract} = useContext(EdubukContexts);
-    const [studentAdd, setStudentAdd] = useState("");
     const [values, setValues] = useState(finderData);
-    const [uri, setUri] = useState([]);
     const [loading, setLoading] =  useState(false);
-
+    const {publicKey} = useWallet();
 
     const sendEmail = async(e)=>{
       e.preventDefault();
@@ -90,7 +88,7 @@ const Finder = () => {
         type="hidden"
         required
         name="wallet_address"
-        value={account}
+        value={publicKey?.toBase58()}
       ></input>
       </div>
       {loading === true ? <SmallLoader /> : <button>Request Now</button>}

@@ -10,7 +10,7 @@ const ConnectWalletButton = () => {
         <div>
             {connected ? (
                 <div className='wallet-add'>
-                    <p>Wallet connected: <span>{publicKey?.toBase58()?.slice(0,10)}...</span></p>
+                    <p>Wallet connected: <span>{publicKey?.toBase58()?.slice(0,8)}...</span></p>
                 </div>
             ) : (
                 <WalletModalButton>Connect Wallet</WalletModalButton>

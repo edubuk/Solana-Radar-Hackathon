@@ -206,7 +206,7 @@ const unZipFiles = async (e) => {
     <h2>Issue Multiple Certificate</h2>
     <div className="input-box">
       <input type='text' required placeholder='Issuer Name' value={issuerName} onChange={(e)=>setIssuerName(e.target.value)}></input>
-      <label for="name">Issuer Name</label>
+      <label htmlFor="name">Issuer Name</label>
       </div>
       <div className="upload-section">
       {

@@ -5,18 +5,17 @@ import './verifier.css'
 import CryptoJS from "crypto-js";
 import HexToDateTime from "./HexToTime";
 import SmallLoader from "../SmallLoader/SmallLoader";
-
-
+import { getProgram } from "../../Utils/connection";
+import { useWallet } from "@solana/wallet-adapter-react";
 const Verifier = () => {
   const [fileHash, setFileHash] = useState(null);
   const [loader, setLoading] = useState(false);
   const [inputFile, setInputFile] = useState();
-  
+  const wallet = useWallet();
 const [values, setValues] = useState({
   studentName:"",
   certType:"",
   issuerName:"",
-  witness:"",
   uri:"",
   timestamp:"",
 })
@@ -37,24 +36,42 @@ const [values, setValues] = useState({
 
   }
 
-  // upload data on blockchain
-
-  const verifyCert = async (e) => {
-    e.preventDefault();
-    //const currAccount = account.toLowerCase();
+  const verifyCert = async () => { 
     try {
-      setLoading(true)
+      setLoading(true);
+      const program = getProgram(wallet);
+      const Tx = await program?.account?.state?.all();
+      console.log("Tx", Tx[0].account.certificates);
       
-      
-
-    
-      
+      if (Tx && Tx.length > 0)
+      {
+        const cert = Tx[0]?.account?.certificates?.find(c=>
+          c.hash===fileHash
+        )
+        if(cert)
+        {
+          toast.success("Certifacte is verified")
+          setValues({
+            studentName:cert.studentName,
+            certType:cert.certificateType,
+            issuerName:cert.issuerName,
+            uri:cert.url,
+            timestamp:cert.timestamp,
+          })
+        }
+        else
+        {
+          toast.error("certificate is not registered");
+        }
+      } 
     } catch (error) {
+      console.error("Error while getting institute details: ", error);
+    } finally {
+      // Ensure loading state is stopped regardless of success or failure
       setLoading(false);
-      toast.error("This certificate not registered !");
-      console.error("Error in certificate verification: ", error);
     }
   };
+ 
 
    // function to handle input file
    const handleFileChange = (e)=>{
@@ -111,7 +128,6 @@ const [values, setValues] = useState({
             </div>
               <p>Certificate Type : <span>{values.certType}</span></p>
               <p>Issued By : <span>{values.issuerName}</span></p>
-              <p>Issuer Address : <span>{values.witness?.slice(0,15)}...</span> </p>
               <p>Issued On : <HexToDateTime hexValue={values.timestamp} /></p>
             </div>
           </div>

@@ -116,6 +116,33 @@ form>h2{
     background-color: #216288ad;
   }
 
+  .multi-btn
+  {
+    display: flex;
+    justify-content: center;
+    align-items:center;
+    gap: 10px;
+  }
+
+  #register-btn{
+    padding: 10px 20px;
+    font-size: 15px;
+    border-radius: 0.3rem;
+    outline: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  #solana-explorer{
+    padding: 8px 20px;
+    font-size: 15px;
+    border-radius: 0.3rem;
+    border:1px  dashed;
+    cursor: pointer;
+    color: #006666;
+    text-decoration: none;
+  }
+
 
   .page {
     width: 100%;

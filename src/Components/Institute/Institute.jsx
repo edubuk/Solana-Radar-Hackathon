@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import PostCert from './PostCert'
+import PostCert from './PostCert' 
 import BulkUpload from './BulkUpload'
 import { EdubukContexts } from './../../Context/EdubukContext';
 import AddWitness from './AddWitness';
@@ -8,41 +8,52 @@ import SmallLoader from '../SmallLoader/SmallLoader';
 import { PublicKey } from '@solana/web3.js';
 import { getProgram } from '../../Utils/connection';
 import { useWallet } from '@solana/wallet-adapter-react';
+import toast from 'react-hot-toast';
 
 const Institute = () => {
     const [openPage, setOpenPage] = useState(true);
     const [instName, setInstName] = useState(null);
-    const {connectingWithContract,account} = useContext(EdubukContexts);
     const [regInst, setRegInst] = useState(false);
     const [openAddWitness, setOpenAddWitness] = useState(false);
     const [loading , setLoading] = useState(false);
     const wallet = useWallet();
-    const adminAcc = process.env.REACT_APP_ADMIN?.toLowerCase();
-    const currAccount = account?.toLowerCase();
-
-    const verifyInst = async()=>{
+    const verifyIns = async () => {
+      const searchAddress = wallet?.publicKey?.toBase58(); // the address to search for
+      console.log(searchAddress)
       try {
         setLoading(true);
-        const stateKey = new PublicKey("B1273he1boBD2PpS9ouvFE2nquZHHk8SyRMTeRJiDxZK");
         const program = getProgram(wallet);
-        const Tx = await program.methods.getInstituteDetails()
-        console.log(Tx);
-      } catch (error) {
-        console.error("Error in certificate Registration: ", error);
+        
+        // Fetch all accounts of the 'state' type
+        const Tx = await program.account.state.all();
+        console.log(Tx[0].account?.institutes[0].instituteAddress.toBase58());
+        // Apply filter to search for the specific instituteAddress
+        if(Tx)
+        {
+          const institute = Tx[0].account?.institutes?.find(inst=>
+            inst.instituteAddress?.toBase58()===searchAddress
+          )
+
+          if(institute)
+          {
+            setInstName(institute?.name);
+          }
+        }
         setLoading(false);
+
+      } catch (error) {
+        console.error("Error while getting institute details: ", error);
       }
-    }
+    };
 
     useEffect(()=>{
-      verifyInst();
+      verifyIns();
     },[wallet.publicKey])
-
-
 
   return (
     <div className='container'>
     {
-      ( adminAcc!==currAccount)?
+      instName?
     <div className='container'>
     <h3>{instName}</h3>
       <div className='btn'>

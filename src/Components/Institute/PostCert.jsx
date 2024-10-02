@@ -25,7 +25,6 @@ const PostCert = () => {
   const [uri, setUri] = useState(null);
   const [loader, setLoading] = useState(false);
   const [values, setValues] = useState(RegCertValue);
-  const { connectingWithContract } = useContext(EdubukContexts);
   const [inputFile, setInputFile] = useState();
 
   const wallet = useWallet();
@@ -93,7 +92,7 @@ const PostCert = () => {
     //const currAccount = account.toLowerCase();
     try {
       setLoading(true)
-      const statekey = new PublicKey("B1273he1boBD2PpS9ouvFE2nquZHHk8SyRMTeRJiDxZK")
+      const statekey = new PublicKey("5FF7agoR4uXYnas6exwV6dwtecynBL4P2Jk356hbxqrV")
       const program = getProgram(wallet);
       //if (adminAcc !== currAccount) return toast.error("You are not Admin");
      const Tx = await program.methods.postCertificate(
@@ -166,7 +165,7 @@ const PostCert = () => {
             value={values.studentAdd}
             onChange={onChangeHandler}
           ></input>
-          <label htmlFo="name">Student Wallet Address</label>
+          <label htmlFor="name">Student Wallet Address</label>
         </div>
         <div className="input-box">
           <input
@@ -177,7 +176,7 @@ const PostCert = () => {
             value={values.certType}
             onChange={onChangeHandler}
           ></input>
-          <label htmlFo="name">Certificate Type</label>
+          <label htmlFor="name">Certificate Type</label>
         </div>
         <div className="input-box">
           <input
@@ -188,7 +187,7 @@ const PostCert = () => {
             value={values.issuerName}
             onChange={onChangeHandler}
           ></input>
-          <label htmlFo="name">Issuer Name</label>
+          <label htmlFor="name">Issuer Name</label>
         </div>
         <div className="upload-section">
           <input

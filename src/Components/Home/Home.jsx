@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import hero from '../../assets/hero.png'
 import './home.css'
-import { EdubukConAdd } from './../../Context/constant';
+
 const Home = () => {
   return (
     <div className='home-container'>
