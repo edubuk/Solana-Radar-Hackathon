@@ -1,42 +1,25 @@
-import React, { useContext, useState } from 'react';
-import './holder.css'; // Import the CSS file
+import React, {useState } from 'react';
+import './holder.css';
 import Model from './Model';
-import { EdubukContexts } from '../../Context/EdubukContext';
-import toast from 'react-hot-toast';
+
 
 const Documents = ({studentData}) => {
     const [openModal, setOpenModal] = useState(false);
-    const {connectingWithContract} = useContext(EdubukContexts);
-    const [externalAdd, setExternalAdd] = useState("");
     const [currUri, setCurrUri] = useState("");
     const [isShareBtn, setShareBtn] = useState(true);
-    const [openManageAccess, setOpenManageAccess] = useState(true);
 
-    const handleValueChange = (value) => {
-      setExternalAdd(value); 
-    };
 
-    const shareAccess = async()=>{
-      try {
-        const contract = await connectingWithContract();
-        await contract.giveAccess(externalAdd,currUri);
-        toast.success(`Access granted to ${externalAdd?.slice(0,10)}...`)
-      } catch (error) {
-        toast.error("Error while providing access");
-        console.log("Error while providing access ",error);
-      }
-    }
-    const revokeAccess = async()=>{
-      try {
-        const contract = await connectingWithContract();
-        await contract.revokeAccess(externalAdd,currUri);
-        toast.success(`Access revoked from ${externalAdd?.slice(0,10)}...`)
-      } catch (error) {
-        toast.error("Error while providing access");
-        console.log("Error while providing access ",error);
-      }
+    const openModelHandler = (uri)=>{
+      setOpenModal(true);
+      setCurrUri(uri);
+      setShareBtn(true)
     }
 
+    const openManageModel = (uri)=>{
+      setOpenModal(true);
+      setCurrUri(uri);
+      setShareBtn(false)
+    }
 
   return (
     <div className="card-grid">
@@ -45,8 +28,8 @@ const Documents = ({studentData}) => {
         <div className='card-header'>
           <h3>Doc {i+1}</h3>
           <div className='card-header-btn'>
-          <button onClick={()=>{setOpenModal(true);setCurrUri(uri);setShareBtn(true)}}>share</button>
-          <button onClick={()=>{setOpenModal(true);setCurrUri(uri);setShareBtn(false)}}>manage access</button>
+          <button onClick={()=>openModelHandler(uri)}>share</button>
+          <button onClick={()=>openManageModel(uri)}>manage access</button>
           </div>
         </div>
           <a
@@ -62,9 +45,6 @@ const Documents = ({studentData}) => {
       {
             openModal && <Model 
             setOpenModal={setOpenModal} 
-            onValueChange={handleValueChange}
-            shareAccess = {shareAccess}
-            revokeAccess= {revokeAccess}
             isShareBtn = {isShareBtn}
             currUri = {currUri}
             />

@@ -77,7 +77,7 @@ const Navbar = () => {
           )}
         </div>
         <div className={publicKey&&'account-info'}>
-        <ConnectWalletButton></ConnectWalletButton>
+        <ConnectWalletButton ></ConnectWalletButton>
         </div>
       </div>
       {openSidebar && <Sidebar navData={navData} />}

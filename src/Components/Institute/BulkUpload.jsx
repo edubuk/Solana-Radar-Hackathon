@@ -5,7 +5,10 @@ import  Papa from 'papaparse';
 import CryptoJS from 'crypto-js';
 import { EdubukContexts } from '../../Context/EdubukContext';
 import SmallLoader from '../SmallLoader/SmallLoader';
-
+import { useWallet } from '@solana/wallet-adapter-react';
+import { getProgram } from '../../Utils/connection';
+import { PublicKey } from '@solana/web3.js';
+import { web3 } from "@project-serum/anchor";
 
 const BulkUpload = () => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -18,7 +21,10 @@ const BulkUpload = () => {
   const [data, setData] = useState([])
   const [count, setCount] = useState(0);
   const[csvfile, setCSVFile] = useState();
-
+  const wallet = useWallet();
+  
+  //state key
+  const statekey = new PublicKey("HLALuo88phnccLW1TPnQ1Y7b3ds7UEaMeJ9j7qijyEss");
 
   // function to handle input file
   const handleFileChange = (e)=>{
@@ -163,25 +169,27 @@ const unZipFiles = async (e) => {
       {
         data.push({
           studentname:certData[i].studentName,
-    studentAdd:certData[i].studentAdd,
-    hash:fileHash[i],
-    _type:certData[i].certType,
-    URI:uri[i],
-    _witness:account
+          studentAdd:new web3.PublicKey(certData[i].studentAdd),
+          hash:fileHash[i],
+          _type:certData[i].certType,
+          URI:uri[i],
+          _witness:account
         })
       }
 
         try {
-          //if (adminAcc !== currAccount) return toast.error("You are not Admin");
-          const id = toast.loading("Metamask is set to open. Please wait...");
-          setTimeout(()=>{
-            toast.dismiss(id);
-          },2000)
-          const contract = await connectingWithContract();
-         // console.log("contract", contract);
-          const registerBulkCert = await contract.bulkUpload(data,issuerName,{gasLimit: 8000000});
+          const program = getProgram(wallet);
           setLoading(true);
-          await registerBulkCert.wait();
+          const Tx = await program.methods.
+          bulkUpload(data,issuerName).
+          accounts({
+            state:statekey,
+            institute:wallet.publicKey,
+            systemProgram:web3.SystemProgram.programId
+          }).signers([])
+          .rpc();
+      
+          setLoading(true);
           setLoading(false);
           toast.success("Certificated Posted successfully");
           setIssuerName("");

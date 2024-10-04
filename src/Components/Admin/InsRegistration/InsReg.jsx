@@ -6,7 +6,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { web3 } from "@project-serum/anchor";
 import { getProgram } from "../../../Utils/connection";
 import { Buffer } from 'buffer';
-import { PublicKey, SystemProgram } from "@solana/web3.js";
+import { PublicKey} from "@solana/web3.js";
 
 
 window.Buffer = window.Buffer || Buffer;
@@ -45,9 +45,7 @@ const InsReg = () => {
 
       if (adminAcc !== currAccount) return toast.error("You are not Admin");
       setLoading(true);
-      // generate a new keypair for the state
-      const stateKey = web3.Keypair.generate();
-      const statekey = new PublicKey("5FF7agoR4uXYnas6exwV6dwtecynBL4P2Jk356hbxqrV")
+      const statekey = new PublicKey("HLALuo88phnccLW1TPnQ1Y7b3ds7UEaMeJ9j7qijyEss")
 
       // get the program from the wallet
       const program = getProgram(wallet);

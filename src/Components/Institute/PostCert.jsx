@@ -1,14 +1,13 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import "./institute.css";
 import toast from "react-hot-toast";
 import SmallLoader from "../SmallLoader/SmallLoader";
-import { EdubukContexts } from "../../Context/EdubukContext";
 import CryptoJS from "crypto-js";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { web3 } from "@project-serum/anchor";
 import { getProgram } from "../../Utils/connection";
 import { Buffer } from 'buffer';
-import { PublicKey, SystemProgram } from "@solana/web3.js";
+import { PublicKey} from "@solana/web3.js";
 
 
 window.Buffer = window.Buffer || Buffer;
@@ -92,7 +91,7 @@ const PostCert = () => {
     //const currAccount = account.toLowerCase();
     try {
       setLoading(true)
-      const statekey = new PublicKey("5FF7agoR4uXYnas6exwV6dwtecynBL4P2Jk356hbxqrV")
+      const statekey = new PublicKey("HLALuo88phnccLW1TPnQ1Y7b3ds7UEaMeJ9j7qijyEss")
       const program = getProgram(wallet);
       //if (adminAcc !== currAccount) return toast.error("You are not Admin");
      const Tx = await program.methods.postCertificate(
@@ -107,8 +106,7 @@ const PostCert = () => {
       state:statekey,
       institute:wallet.publicKey,
       systemProgram:web3.SystemProgram.programId
-     }).
-     signers([])
+     }).signers([])
      .rpc()
   
      if(Tx)

@@ -84,7 +84,7 @@
           "type": "string"
         },
         {
-          "name": "type",
+          "name": "certificateType",
           "type": "string"
         },
         {
@@ -145,6 +145,35 @@
         }
       ],
       "args": []
+    },
+    {
+      "name": "bulkUpload",
+      "accounts": [
+        {
+          "name": "state",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "institute",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "data",
+          "type": {
+            "vec": {
+              "defined": "BulkUploadData"
+            }
+          }
+        },
+        {
+          "name": "issuerName",
+          "type": "string"
+        }
+      ]
     }
   ],
   "accounts": [
@@ -240,6 +269,10 @@
             "type": "string"
           },
           {
+            "name": "witnessAddress",
+            "type": "publicKey"
+          },
+          {
             "name": "timestamp",
             "type": "i64"
           }
@@ -270,6 +303,34 @@
             "type": {
               "vec": "string"
             }
+          }
+        ]
+      }
+    },
+    {
+      "name": "BulkUploadData",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "studentName",
+            "type": "string"
+          },
+          {
+            "name": "studentAddress",
+            "type": "publicKey"
+          },
+          {
+            "name": "hash",
+            "type": "string"
+          },
+          {
+            "name": "uri",
+            "type": "string"
+          },
+          {
+            "name": "certificateType",
+            "type": "string"
           }
         ]
       }
@@ -349,6 +410,48 @@
           "index": false
         }
       ]
+    },
+    {
+      "name": "CertificatePosted",
+      "fields": [
+        {
+          "name": "hash",
+          "type": "string",
+          "index": false
+        },
+        {
+          "name": "instituteAddress",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "studentName",
+          "type": "string",
+          "index": false
+        },
+        {
+          "name": "issuerName",
+          "type": "string",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "BulkUploadFailed",
+      "fields": [
+        {
+          "name": "failedUploads",
+          "type": {
+            "vec": "string"
+          },
+          "index": false
+        },
+        {
+          "name": "failedCount",
+          "type": "u64",
+          "index": false
+        }
+      ]
     }
   ],
   "errors": [
@@ -363,6 +466,10 @@
     {
       "code": 6002,
       "name": "CertificateNotFound"
+    },
+    {
+      "code": 6003,
+      "name": "TupleSizeExceeded"
     }
   ]
 }

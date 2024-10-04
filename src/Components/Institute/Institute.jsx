@@ -17,6 +17,7 @@ const Institute = () => {
     const [openAddWitness, setOpenAddWitness] = useState(false);
     const [loading , setLoading] = useState(false);
     const wallet = useWallet();
+
     const verifyIns = async () => {
       const searchAddress = wallet?.publicKey?.toBase58(); // the address to search for
       console.log(searchAddress)
@@ -42,6 +43,7 @@ const Institute = () => {
         setLoading(false);
 
       } catch (error) {
+        setLoading(false)
         console.error("Error while getting institute details: ", error);
       }
     };

@@ -10,7 +10,10 @@ import { useWallet } from '@solana/wallet-adapter-react';
 const Holder = () => {
   const [studentData, setStudentData] = useState({});
   const [loading, setLoading] = useState(false);
-  const [selectedIssuer, setSelectedIssuer] = useState(''); // State for dropdown selection
+  const [selectedIssuer, setSelectedIssuer] = useState(''); 
+  
+  const {setStudentName} = useContext(EdubukContexts);
+
   const wallet = useWallet();
   const getStudentData = async () => {
     try {
@@ -27,6 +30,7 @@ const Holder = () => {
         )
         console.log("data",studentData)
       if (studentData) {
+        setStudentName(studentData?.name);
         setStudentData(studentData);
         setSelectedIssuer(studentData.instituteNames[0]); // Set the first issuer as the default selection
         setLoading(false);
