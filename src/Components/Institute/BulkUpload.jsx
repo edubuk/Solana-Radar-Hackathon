@@ -164,16 +164,19 @@ const unZipFiles = async (e) => {
     const issueMultipleCert = async(e)=>{
       e.preventDefault();
       if(certData?.length!==uri.length)
+      {
+        console.log("certData Len",certData.length)
         return toast.error("Data count in zip file and csv file mismatch");
+        }
       for(let i=0;i<uri.length;i++)
       {
         data.push({
-          studentname:certData[i].studentName,
-          studentAdd:new web3.PublicKey(certData[i].studentAdd),
+          studentName:certData[i].studentName,
+          studentAddress:new web3.PublicKey(certData[i].studentAdd),
           hash:fileHash[i],
-          _type:certData[i].certType,
-          URI:uri[i],
-          _witness:account
+          uri:uri[i],
+          certificateType:certData[i].certType,
+          
         })
       }
 
