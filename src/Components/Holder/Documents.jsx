@@ -33,7 +33,7 @@ const Documents = ({studentData}) => {
           </div>
         </div>
           <a
-              href={`https://${process.env.REACT_APP_PINATAGATWAY}/ipfs/${uri}`}
+              href={`https://edubuk-solana-radar-server.vercel.app/api/v1/getDocByUri/${uri}`}
               target="_blank"
               rel="noreferrer"
             >

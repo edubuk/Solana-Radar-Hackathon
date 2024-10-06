@@ -7,6 +7,7 @@ import HexToDateTime from "./HexToTime";
 import SmallLoader from "../SmallLoader/SmallLoader";
 import { getProgram } from "../../Utils/connection";
 import { useWallet } from "@solana/wallet-adapter-react";
+
 const Verifier = () => {
   const [fileHash, setFileHash] = useState(null);
   const [loader, setLoading] = useState(false);
@@ -16,6 +17,7 @@ const [values, setValues] = useState({
   studentName:"",
   certType:"",
   issuerName:"",
+  instituteName:"",
   uri:"",
   timestamp:"",
 })
@@ -38,6 +40,7 @@ const [values, setValues] = useState({
 
   const verifyCert = async () => { 
     try {
+      console.log("fileHash",fileHash)
       setLoading(true);
       const program = getProgram(wallet);
       const Tx = await program?.account?.state?.all();
@@ -51,12 +54,14 @@ const [values, setValues] = useState({
         if(cert)
         {
           toast.success("Certifacte is verified")
+          console.log("cert data ",cert.timestamp.toNumber())
           setValues({
             studentName:cert.studentName,
             certType:cert.certificateType,
             issuerName:cert.issuerName,
+            instituteName:cert.collegeName,
             uri:cert.url,
-            timestamp:cert.timestamp,
+            timestamp:cert.timestamp?.toNumber(),
           })
         }
         else
@@ -109,25 +114,26 @@ const [values, setValues] = useState({
       </form>
     </div>
     {
-    values.studentName&&<div class="id-card-wrapper">
-        <div class="id-card">
-          <div class="profile-row">
-            <div class="dp">
-              <div class="dp-arc-outer"></div>
-              <div class="dp-arc-inner"></div>
+    values.studentName&&<div className="id-card-wrapper">
+        <div className="id-card">
+          <div className="profile-row">
+            <div className="dp">
+              <div className="dp-arc-outer"></div>
+              <div className="dp-arc-inner"></div>
               <img src={Img} alt="profile" />
             </div>
-            <div class="desc">
+            <div className="desc">
             <div className="profile-header">
               <h1>{values.studentName}</h1> 
               <a
-              href={`https://${process.env.REACT_APP_PINATAGATWAY}/ipfs/${values?.uri}`}
+              href={`https://edubuk-solana-radar-server.vercel.app/api/v1/getDocByUri/${values?.uri}`}
               target="_blank"
               rel="noreferrer"
             >View Certificate</a>
             </div>
               <p>Certificate Type : <span>{values.certType}</span></p>
               <p>Issued By : <span>{values.issuerName}</span></p>
+              <p>Institute : <span>{values.instituteName}</span></p>
               <p>Issued On : <HexToDateTime hexValue={values.timestamp} /></p>
             </div>
           </div>

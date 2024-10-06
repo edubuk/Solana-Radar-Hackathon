@@ -25,9 +25,10 @@ const PostCert = () => {
   const [loader, setLoading] = useState(false);
   const [values, setValues] = useState(RegCertValue);
   const [inputFile, setInputFile] = useState();
-
+  const [isTransaction, setTransaction] = useState(false);
   const wallet = useWallet();
 
+  const currAccount = wallet?.publicKey;
   //upload docs to IPFS
   const uploadToIpfs = async (e) => {
     e.preventDefault();
@@ -91,7 +92,7 @@ const PostCert = () => {
     //const currAccount = account.toLowerCase();
     try {
       setLoading(true)
-      const statekey = new PublicKey("HLALuo88phnccLW1TPnQ1Y7b3ds7UEaMeJ9j7qijyEss")
+      const statekey = new PublicKey(process.env.REACT_APP_StateKey)
       const program = getProgram(wallet);
       //if (adminAcc !== currAccount) return toast.error("You are not Admin");
      const Tx = await program.methods.postCertificate(
@@ -112,7 +113,8 @@ const PostCert = () => {
      if(Tx)
      {
       setLoading(false);
-      toast.success("Certificated Posted successfully");
+      toast.success("Certificate Posted successfully");
+      setTransaction(true);
       setValues("");
      }
       
@@ -214,7 +216,10 @@ const PostCert = () => {
             </a>
           )}
         </div>
-        <button onClick={RegCert}>Register Certificate</button>
+        <div className="multi-btn">
+        <button id="register-btn" onClick={RegCert}>Register Certificate</button>
+        {isTransaction&&<a href={`https://explorer.solana.com/address/${currAccount}?cluster=devnet`} id="solana-explorer" target="_blank" rel="">View Transaction</a>}
+        </div>
       </form>
     </div>
   );

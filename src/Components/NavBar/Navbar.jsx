@@ -24,7 +24,7 @@ const Navbar = () => {
     { name: "Issuer", path: "/issuer" },
     { name: "Verifier", path: "/verifier" },
     { name: "Holder", path: "/holder" },
-    { name: "Finder", path: "/finder" },
+    { name: "Request", path: "/request" },
     { name: "Admin", path: "/admin" },
   ];
 
@@ -36,6 +36,7 @@ const Navbar = () => {
     if (activeRoute) {
       setActiveNav(activeRoute.name);
     }
+    // eslint-disable-next-line
   }, [location.pathname]); 
 
   // Handle window resize

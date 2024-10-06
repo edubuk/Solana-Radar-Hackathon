@@ -171,12 +171,13 @@ const Model = ({ setOpenModal, currUri, isShareBtn }) => {
               </form>
             </>
           ) : (
+            accessList.length>0?
             <div className="dropdown">
               {accessList?.map((item, index) => (
                 <div key={index} className="shared-list">
                   <p>
                     <strong>{item.name}</strong> --{" "}
-                    <strong>{item.email?.slice(0, 7)}</strong>...
+                    <strong>{item.email?.slice(0, 9)}</strong>...
                   </p>
                   {loading ? (
                     <SmallLoader />
@@ -188,7 +189,7 @@ const Model = ({ setOpenModal, currUri, isShareBtn }) => {
                   )}
                 </div>
               ))}
-            </div>
+            </div>:<div>No Record Found...</div>
           )}
         </div>
       </div>

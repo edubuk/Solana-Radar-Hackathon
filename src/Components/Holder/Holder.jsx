@@ -10,9 +10,9 @@ import { useWallet } from '@solana/wallet-adapter-react';
 const Holder = () => {
   const [studentData, setStudentData] = useState({});
   const [loading, setLoading] = useState(false);
-  const [selectedIssuer, setSelectedIssuer] = useState(''); 
-  
-  const {setStudentName} = useContext(EdubukContexts);
+  const [selectedIssuer, setSelectedIssuer] = useState('');
+
+  const { setStudentName } = useContext(EdubukContexts);
 
   const wallet = useWallet();
   const getStudentData = async () => {
@@ -22,19 +22,22 @@ const Holder = () => {
       const program = getProgram(wallet);
       const Tx = await program?.account?.state?.all();
       console.log("Tx", Tx[0].account.certificates);
-      
-      if (Tx && Tx.length > 0)
-      {
-        const studentData = Tx[0]?.account?.students?.find(stud=>
-          stud.address.toBase58()===currAcc
+
+      if (Tx && Tx.length > 0) {
+        const studentData = Tx[0]?.account?.students?.find(stud =>
+          stud.address.toBase58() === currAcc
         )
-        console.log("data",studentData)
-      if (studentData) {
-        setStudentName(studentData?.name);
-        setStudentData(studentData);
-        setSelectedIssuer(studentData.instituteNames[0]); // Set the first issuer as the default selection
-        setLoading(false);
-      }
+        console.log("data", studentData)
+        if (studentData) {
+          setStudentName(studentData?.name);
+          setStudentData(studentData);
+          setSelectedIssuer(studentData.instituteNames[0]); // Set the first issuer as the default selection
+          setLoading(false);
+        }
+        else {
+          setLoading(false);
+          toast.error("Not found any record...")
+        }
       }
     } catch (error) {
       setLoading(false);

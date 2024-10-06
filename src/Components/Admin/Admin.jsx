@@ -21,8 +21,8 @@ const Admin = () => {
       <>
       <div className='btn'>
         <button className ={openPage && openRevokePage?"btn-1":''} onClick={()=>{setOpenPage(true);setOpenRevokePage(true);}}>Register Institute</button>
-        <button className ={!openPage && openRevokePage?"btn-2":''} onClick={()=>{setOpenPage(false);setOpenRevokePage(true);}}>Approve Institute</button>
-        <button className ={!openRevokePage?"btn-3":''} onClick={()=>{setOpenRevokePage(false)}}>Remove Institute</button>
+        {/* <button className ={!openPage && openRevokePage?"btn-2":''} onClick={()=>{setOpenPage(false);setOpenRevokePage(true);}}>Approve Institute</button> */}
+        <button className ={!openPage && openRevokePage?"btn-2":''} onClick={()=>{setOpenPage(false);setOpenRevokePage(true);}}>Remove Institute</button>
       </div>
       <div>
       {openRevokePage?

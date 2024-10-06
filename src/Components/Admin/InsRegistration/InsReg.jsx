@@ -45,7 +45,7 @@ const InsReg = () => {
 
       if (adminAcc !== currAccount) return toast.error("You are not Admin");
       setLoading(true);
-      const statekey = new PublicKey("HLALuo88phnccLW1TPnQ1Y7b3ds7UEaMeJ9j7qijyEss")
+      const statekey = new PublicKey(process.env.REACT_APP_StateKey)
 
       // get the program from the wallet
       const program = getProgram(wallet);

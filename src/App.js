@@ -1,10 +1,10 @@
+import { useMemo,useEffect } from "react";
 import "./App.css";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import { ConnectionProvider, WalletProvider } from "@solana/wallet-adapter-react";
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import { SolflareWalletAdapter } from "@solana/wallet-adapter-solflare";
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
-import { useMemo } from "react";
 import { clusterApiUrl } from "@solana/web3.js";
 import "@solana/wallet-adapter-react-ui/styles.css"; 
 import NavBar from "./Components/NavBar/Navbar";
@@ -13,7 +13,7 @@ import  {Home, Admin, Institute,Holder}  from "./Components/index";
 import { Toaster } from "react-hot-toast";
 import Verifier from "./Components/Verifier/Verifier";
 import Finder from "./Components/CredentialFinder/Finder";
-
+import { useWallet } from "@solana/wallet-adapter-react";
 function App() {
 
   const network = WalletAdapterNetwork.Devnet; // Devnet or Mainnet
@@ -25,6 +25,7 @@ function App() {
         ],
         [network]
     );
+
 
   return (
     <>
@@ -39,7 +40,7 @@ function App() {
         <Route path="/issuer" element={<Institute />} />
         <Route path="/holder" element={<Holder />} />
         <Route path="/verifier" element={<Verifier />} />
-        <Route path="/finder" element={<Finder/>} />
+        <Route path="/request" element={<Finder/>} />
       </Routes>
        </WalletModalProvider>
       </WalletProvider>

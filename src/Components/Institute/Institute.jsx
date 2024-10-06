@@ -59,9 +59,9 @@ const Institute = () => {
     <div className='container'>
     <h3>{instName}</h3>
       <div className='btn'>
-        <button className ={openPage && !openAddWitness?"btn-1":''} onClick={()=>{setOpenPage(true);setOpenAddWitness(false)}}>Single Upload</button>
-        <button className ={!openPage && !openAddWitness?"btn-2":''} onClick={()=>{setOpenPage(false);setOpenAddWitness(false)}}>Multiple Upload</button>
-        <button className ={openAddWitness?"btn-3":''}  onClick={()=>setOpenAddWitness(true)}>Add Witness</button>
+        <button className ={openPage && !openAddWitness?"btn-1":''} onClick={()=>{setOpenPage(true);setOpenAddWitness(false)}}>Single Registration</button>
+        <button className ={!openPage && !openAddWitness?"btn-2":''} onClick={()=>{setOpenPage(false);setOpenAddWitness(false)}}>Multiple Registration</button>
+        {/* <button className ={openAddWitness?"btn-3":''}  onClick={()=>setOpenAddWitness(true)}>Add Witness</button> */}
       </div>
       <div>
       {!openAddWitness?

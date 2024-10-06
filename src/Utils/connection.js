@@ -1,5 +1,5 @@
 import { Connection, clusterApiUrl } from "@solana/web3.js";
-import { AnchorProvider, Program, web3 } from "@project-serum/anchor";
+import { AnchorProvider, Program} from "@project-serum/anchor";
 import { PROGRAM_ID, IDL } from './constants';
 
 // Connect to the Solana devnet
