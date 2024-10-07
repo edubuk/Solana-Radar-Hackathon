@@ -11,8 +11,7 @@ const RevokInst = () => {
   const revokeInst = async (e) => {
     e.preventDefault();
     try {
-        setLoading(true)
-   
+      setLoading(true)
       setLoading(false);
       toast.success("Institute Revoked Successfully");
       setInstWitnessAdd("");

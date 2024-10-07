@@ -73,7 +73,7 @@ const InsReg = () => {
       setValues(InstRegValue);
     } catch (error) {
       setLoading(false);
-      toast.error("Error in Institute registration", error);
+      toast.error("Please try with any other wallet address", error);
       console.error("Error in Institute registration: ", error);
     }
   };
