@@ -8,6 +8,7 @@ import { web3 } from "@project-serum/anchor";
 import { getProgram } from "../../Utils/connection";
 import { Buffer } from 'buffer';
 import { PublicKey} from "@solana/web3.js";
+import { Transaction, SystemProgram, sendAndConfirmTransaction } from '@solana/web3.js';
 
 
 window.Buffer = window.Buffer || Buffer;
@@ -83,47 +84,74 @@ const PostCert = () => {
 
   // upload data on blockchain
 
+
   const RegCert = async (e) => {
     e.preventDefault();
+  
     if (!wallet.publicKey) {
       toast.error("Wallet not connected.");
       return;
     }
-    //const currAccount = account.toLowerCase();
-    try {
-      setLoading(true)
-      const statekey = new PublicKey(process.env.REACT_APP_StateKey)
-      const program = getProgram(wallet);
-      //if (adminAcc !== currAccount) return toast.error("You are not Admin");
-     const Tx = await program.methods.postCertificate(
-      values.studentName,
-      new web3.PublicKey(values.studentAdd),
-      uri,
-      fileHash,
-      values.certType,
-      values.issuerName,
-    
-     ).accounts({
-      state:statekey,
-      institute:wallet.publicKey,
-      systemProgram:web3.SystemProgram.programId
-     }).signers([])
-     .rpc()
   
-     if(Tx)
-     {
+    try {
+      setLoading(true);
+  
+      const statekey = new PublicKey(process.env.REACT_APP_StateKey);
+      const program = getProgram(wallet);
+  
+      // Get the connection from the program or use your connection
+      const connection = program.provider.connection;
+  
+      // Fetch a recent blockhash
+      const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash();
+  
+      // Build the transaction
+      const transaction = await program.methods.postCertificate(
+        values.studentName,
+        new web3.PublicKey(values.studentAdd),
+        uri,
+        fileHash,
+        values.certType,
+        values.issuerName
+      )
+        .accounts({
+          state: statekey,
+          institute: wallet.publicKey,
+          systemProgram: SystemProgram.programId,
+        })
+        .transaction(); // Generate the transaction
+  
+      // Add the recent blockhash and set the fee payer
+      transaction.recentBlockhash = blockhash;
+      transaction.feePayer = wallet.publicKey;
+  
+      // Send the transaction
+      const signature = await wallet.sendTransaction(transaction, connection, {
+        skipPreflight: false, // Optionally skip preflight
+        preflightCommitment: "finalized", // Use the commitment level
+      });
+  
+      // Confirm the transaction
+      await connection.confirmTransaction({
+        signature,
+        blockhash,
+        lastValidBlockHeight,
+      });
+  
+      // If the transaction is successful
       setLoading(false);
       toast.success("Certificate Posted successfully");
       setTransaction(true);
-      setValues("");
-     }
-      
+      setValues(""); // Clear form values
+  
+      console.log("Transaction successful: ", signature);
     } catch (error) {
       setLoading(false);
-      toast.error("Error in certificate Registration", error);
-      console.error("Error in certificate Registration: ", error);
+      toast.error("Error in certificate registration", error);
+      console.error("Error in certificate registration: ", error);
     }
   };
+  
 
   const onChangeHandler = (e) => {
     e.preventDefault();

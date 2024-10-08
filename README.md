@@ -1,70 +1,46 @@
-# Getting Started with Create React App
+# Solana-Radar-Hackathon (Sept. - Oct. 2024)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Frontend code of Edubuk's dApp integrated with Solana Blockchain (Devnet)
 
-## Available Scripts
+Edubuk makes credentials verification and background checks secure, efficient, cost-effective, and fraud-free using AI & Blockchain Technology. Since launch, Edubuk has recorded 20,000+ certificates on the blockchain, has secured partnerships with 15 universities and third party background verification companies. Globally recognized with 40+ awards on merit, including Best Edtech Startup in G20 Conference, and media recognition from CNBC, CNN, Forbes, Economic Times and Grants from major Blockchains, Edubuk has build on Solana chain now as we prepare to Launch as a part of Singapore based Tenity's accelerator program. We are setting new standards in the credentials & background verification industry, globally.
 
-In the project directory, you can run:
+Whitepaper, Pitchdeck and One-Pager: https://drive.google.com/drive/folders/1fA-XGaz3OWDLDFFHLfqSbEGPv3xvEAAq?usp=sharing
 
-### `npm start`
+**There are 4 stakeholders as mentioned in the diagram below:**
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+1.) Issuer: University or Employer who issues the academic certificate or Work-Experience certificate.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+2.) Holder: Student or Employee with whom this certificate resides.
 
-### `npm test`
+3.) Verifier: Other Universities or Other Employers who directly wish to check the authenticity of the credential of the student on the blockchain.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+4.) Requestor: Third party background verification companies: These companies request the candidate to share their digitally verified certificate stored on the blockchain with them for verification purposes.
 
-### `npm run build`
+![image](https://github.com/user-attachments/assets/60901a8b-143c-41e6-947c-aa77b627f4cb)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+**This project includes a decentralized application (dApp) for recording and verifying certificates on the Solana blockchain. The dApp has two main components:**
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+**1. e-Sealing**
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+The e-Sealing Tab allows users to register certificates on the blockchain by signing the transaction using a Web3 wallet. When registering a certificate:
+Metadata Fields: Users provide three metadata fields:
+Certificate Issued To: The beneficiary of the certificate.
+Certificate Issued By: The issuing authority.
+Certificate Type: Description of the certificate.
+Upload Certificate: Users upload a digital copy of the certificate from their local computer.
+Register File Hash: Clicking "Register File Hash" generates a cryptographic hash of the file and creates a transaction on the blockchain. This process records six fields:
+Beneficiary
+Certifying Authority
+Certificate Details
+Unique file hash (cryptographic)
+Timestamp (when the certificate was recorded in UTC)
+Witness (certifying authority's wallet address)
 
-### `npm run eject`
+**2. Verification**
+The Verification Tab allows users to upload a digital certificate and click "Verify Certificate." The dApp retrieves the six fields from the blockchain to verify the information. If all fields match, it displays a "Certificate Verified" message. If the certificate has been tampered with or was not registered on the chain, it shows "Error! Certificate Not Verified."
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+**Use Cases**
+This dApp has various applications requiring immutable and verifiable records of certification, such as:
+**Educational Credentials
+Professional Licenses
+Authenticity Certificates for Digital or Physical Assets**

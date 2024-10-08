@@ -7,7 +7,7 @@ import { web3 } from "@project-serum/anchor";
 import { getProgram } from "../../../Utils/connection";
 import { Buffer } from 'buffer';
 import { PublicKey} from "@solana/web3.js";
-
+import { Transaction, SystemProgram, sendAndConfirmTransaction } from '@solana/web3.js';
 
 window.Buffer = window.Buffer || Buffer;
 
@@ -33,50 +33,71 @@ const InsReg = () => {
   const currAccount = wallet?.publicKey?.toBase58();
   const adminAcc = process.env.REACT_APP_ADMIN;
 
+
   const instRegistration = async (e) => {
     e.preventDefault();
-    if(!wallet?.publicKey)
-      {
-        toast.error("Wallet is not connected...");
-        return ;
-      }
-    
+    if (!wallet?.publicKey) {
+      toast.error("Wallet is not connected...");
+      return;
+    }
+  
     try {
-
-      if (adminAcc !== currAccount) return toast.error("You are not Admin");
+      if (adminAcc !== currAccount) {
+        return toast.error("You are not Admin");
+      }
+  
       setLoading(true);
-      const statekey = new PublicKey(process.env.REACT_APP_StateKey)
-
-      // get the program from the wallet
+  
+      const statekey = new PublicKey(process.env.REACT_APP_StateKey);
       const program = getProgram(wallet);
-
-      //register institute by calling the solana program
-      const Tx = await program.methods.registerInstitute(
+  
+      // Get the connection from the program or use your connection
+      const connection = program.provider.connection;
+  
+      // Fetch a recent blockhash
+      const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash();
+  
+      // Build the transaction
+      const transaction = await program.methods.registerInstitute(
         values.instName,
-        values.instAcronym, 
+        values.instAcronym,
         new web3.PublicKey(values.witness)
       )
-      .accounts({
-        state:statekey,
-        admin:wallet.publicKey,
-        systemProgram:web3.SystemProgram.programId
-      })
-      .signers([])
-      .rpc();
-      if(Tx)
-      {
-        setLoading(false);
-        toast.success("Institute Registered Successfully");
-        setTransaction(true);
-        console.log("Transaction successfull : ",Tx);
-      }
-      setValues(InstRegValue);
+        .accounts({
+          state: statekey,
+          admin: wallet.publicKey,
+          systemProgram: web3.SystemProgram.programId,
+        })
+        .transaction(); // Generate the transaction
+  
+      // Add the recent blockhash
+      transaction.recentBlockhash = blockhash;
+      transaction.feePayer = wallet.publicKey;
+  
+      // Send the transaction
+      const signature = await wallet.sendTransaction(transaction, connection, {
+        skipPreflight: false, // Optionally skip the preflight simulation
+        preflightCommitment: "finalized", // Use the commitment level
+      });
+  
+      // Confirm the transaction
+      await connection.confirmTransaction({
+        signature,
+        blockhash,
+        lastValidBlockHeight,
+      });
+  
+      setLoading(false);
+      toast.success("Institute Registered Successfully");
+      setTransaction(true);
+      console.log("Transaction successful: ", signature);
     } catch (error) {
       setLoading(false);
       toast.error("Please try with any other wallet address", error);
       console.error("Error in Institute registration: ", error);
     }
   };
+  
   return (
     <div className="form-container">
       <form onSubmit={instRegistration}>

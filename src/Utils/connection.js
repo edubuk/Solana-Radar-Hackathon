@@ -4,7 +4,7 @@ import { PROGRAM_ID, IDL } from './constants';
 
 // Connect to the Solana devnet
 export const getProvider = (wallet) => {
-  const connection = new Connection(clusterApiUrl("devnet"), "processed");
+  const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
   const provider = new AnchorProvider(connection, wallet, {
     preflightCommitment: "processed",
   });

@@ -3,12 +3,12 @@ import JSZip from "jszip";
 import toast from "react-hot-toast";
 import Papa from "papaparse";
 import CryptoJS from "crypto-js";
-import { EdubukContexts } from "../../Context/EdubukContext";
 import SmallLoader from "../SmallLoader/SmallLoader";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { getProgram } from "../../Utils/connection";
 import { PublicKey } from "@solana/web3.js";
 import { web3 } from "@project-serum/anchor";
+import { Transaction, SystemProgram, sendAndConfirmTransaction } from '@solana/web3.js';
 
 const BulkUpload = () => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -154,16 +154,21 @@ const BulkUpload = () => {
   // multiple registration
   const issueMultipleCert = async (e) => {
     e.preventDefault();
-    if(!issuerName)
-    {
-      return toast.error("Please provide Issuer Name")
+  
+    if (!issuerName) {
+      return toast.error("Please provide Issuer Name");
     }
+  
     if (certData?.length !== uri.length) {
       console.log("certData Len", certData.length);
       return toast.error("Data count in zip file and csv file mismatch");
     }
+  
+    const data = []; // Clear the data array
+  
+    // Prepare the data for bulk upload
     for (let i = 0; i < uri.length; i++) {
-      console.log("file type",typeof(certData[i].certType))
+      console.log("file type", typeof certData[i].certType);
       data.push({
         studentName: certData[i].studentName,
         studentAddress: new web3.PublicKey(certData[i].studentAdd),
@@ -172,37 +177,58 @@ const BulkUpload = () => {
         certificateType: certData[i].certType,
       });
     }
-
+  
     try {
       const program = getProgram(wallet);
+      const connection = program.provider.connection;
+      
       setLoading(true);
-      const Tx = await program.methods
+  
+      // Fetch a recent blockhash
+      const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash();
+  
+      // Build the transaction
+      const transaction = await program.methods
         .bulkUpload(data, issuerName)
         .accounts({
           state: statekey,
           institute: wallet.publicKey,
           systemProgram: web3.SystemProgram.programId,
         })
-        .signers([])
-        .rpc();
-      if (Tx) {
-        setLoading(false);
-        setTransaction(true);
-        toast.success("Certificated Registered successfully");
-        setIssuerName("");
-        setCount(0);
-      }
+        .transaction(); // Generate the transaction
+  
+      // Set blockhash and fee payer
+      transaction.recentBlockhash = blockhash;
+      transaction.feePayer = wallet.publicKey;
+  
+      // Send the transaction
+      const signature = await wallet.sendTransaction(transaction, connection, {
+        skipPreflight: false, // Optionally skip preflight
+        preflightCommitment: "finalized", // Use the commitment level
+      });
+  
+      // Confirm the transaction
+      await connection.confirmTransaction({
+        signature,
+        blockhash,
+        lastValidBlockHeight,
+      });
+  
+      // If transaction is successful
+      setLoading(false);
+      setTransaction(true);
+      toast.success("Certificates Registered successfully");
+      setIssuerName("");
+      setCount(0);
+  
+      console.log("Transaction successful: ", signature);
     } catch (error) {
       setLoading(false);
-      toast.error("Error in certificate Registration", error);
-      console.error("Error in certificate Registration: ", error);
+      toast.error("Error in certificate registration", error);
+      console.error("Error in certificate registration: ", error);
     }
-
-    // console.log("cert data len", certData.length);
-    // console.log("uri len", uri.length);
-    // console.log("data", data);
   };
-
+  
   return (
     <div className="form-container">
       <form onSubmit={issueMultipleCert}>
